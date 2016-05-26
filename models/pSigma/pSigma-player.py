@@ -68,9 +68,9 @@ with tf.name_scope('evaluation'):
 
 # initialize
 
-order = 'o'
+'''order = 'o'
 while ((order != 'y') & (order != 'N')):
-	order = raw_input('Continue the train last time? [y/N]')
+	order = raw_input('Continue the train last time? [y/N]')'''
 
 train_step = tf.train.AdamOptimizer().minimize(loss)
 saver = tf.train.Saver()
@@ -81,29 +81,6 @@ max_acc = 0
 
 # train
 with tf.Session() as sess:
-	train_writer = tf.train.SummaryWriter('/tmp/pSigma/train', sess.graph)
-	test_writer = tf.train.SummaryWriter('/tmp/pSigma/test', sess.graph)
 	sess.run(init)
-	if (order == 'y'):
-		saver.restore(sess, '/tmp/pSigma.ckpt')
-
-	for i in range(20000):
-		if (i % 10 == 0):
-			batch_xs, batch_ys = gomoku.test.state, gomoku.test.action
-			summary, acc = sess.run([merged, accuracy], feed_dict={x: batch_xs, y_: batch_ys})
-			test_writer.add_summary(summary, i)
-			#if ((i % 250 == 0) | ((i % 50 == 0) & (i < 250))):
-			print 'Accuracy at step %s: %s' % (i, acc)
-			if (acc > max_acc):
-				max_acc = acc
-				save_path = saver.save(sess, "/tmp/pSigma.ckpt")
-				print 'successfully saved in path', save_path
-		else: 
-			batch_xs, batch_ys = gomoku.train.next_batch(batch_size)
-			summary, _, yt, lossv  = sess.run([merged, train_step, y, loss], feed_dict={x: batch_xs, y_: batch_ys})
-			train_writer.add_summary(summary, i)
-			# print yt[0]
-			# break
-			print 'Loss at step %s : %s' % (i, lossv)
-	print 'The final accuracy of test set'
-	print sess.run(accuracy, feed_dict={x: gomoku.test.images, y_: gomoku.test.labels})
+	saver.restore(sess, '/tmp/pSigma.ckpt')
+	y_pred = sess.run([y], feed_dict = {x : gomoku.test.state})

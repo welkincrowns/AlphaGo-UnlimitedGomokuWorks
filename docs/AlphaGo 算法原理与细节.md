@@ -234,4 +234,4 @@ $$Q(s, a) = (1 - \lambda)\frac{W_v(s,a)}{N_v(s,a)}+\lambda\frac{W_r(s,a)}{N_v(s,
 
 #### Expansion
 
-当一条边$(s, a)$的访问次数超过一个阀值$n_{thr}$的时候，就把后续的状态$s'=f(s,a)$加入到树中，把这个节点的所有边都初始化: $N_v(s',a)=N_r(s',a)=0$,$W_v(s',a)=W_r(s',a)=0$, $P(s',a)=p_\sigma(a|s')$，具体计算的时候$P(s',a)=p_\sigma(a|s')$这步运算也采用多线程，一开始先用tree policy来计算$P(s',a)$(tree policy和rollout policy类似，但是拥有更多的特征值)，直到$p_\sigma(a|s')$计算完成之后再让$P(s',a)=p_\sigma^\beta(a|s')$，这里softmax temperature被设为$\beta$，$\beta$取$0.67$，$n_{thr}$需要
+当一条边$(s, a)$的访问次数超过一个阀值$n_{thr}$的时候，就把后续的状态$s'=f(s,a)$加入到树中，把这个节点的所有边都初始化: $N_v(s',a)=N_r(s',a)=0$,$W_v(s',a)=W_r(s',a)=0$, $P(s',a)=p_\sigma(a|s')$，具体计算的时候$P(s',a)=p_\sigma(a|s')$这步运算也采用多线程，一开始先用tree policy来计算$P(s',a)$(tree policy和rollout policy类似，但是拥有更多的特征值)，直到$p_\sigma(a|s')$计算完成之后再让$P(s',a)=p_\sigma^\beta(a|s')$，这里softmax temperature被设为$\beta$，$\beta$取$0.67$，$n_{thr}$需要与实际队列的情况相契合。
