@@ -146,10 +146,7 @@ def read_data(filename):
 	data_state[0] = feature
 	return data_state
 
-def player(filename):
-	data = read_data(filename)
-
-		# placehold and input
+def build_graph():
 	with tf.name_scope('input'):
 		x = tf.placeholder(tf.float32, [1, 15, 15, 5], 'input_layer')
 
@@ -162,6 +159,11 @@ def player(filename):
 	hidden_conv_layer6 = nn_layer(1, hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
 	y = nn_layer(1, hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tf.nn.softmax, True)
 	v = tf.argmax(y, 1);
+	return x, v
+
+def player(filename):
+	data = read_data(filename)
+	# print data.shape
 
 	saver = tf.train.Saver()
 	init = tf.initialize_all_variables()
@@ -170,11 +172,14 @@ def player(filename):
 	with tf.Session() as sess:
 		sess.run(init)
 		saver.restore(sess, 'tmp/pSigma.ckpt')
-		pos, yt = sess.run([v, y], feed_dict={x: data})
+		pos = sess.run([POS], feed_dict={X: data})
 
 	print pos
-	x = pos / 15
-	y = pos % 15
+	xx = pos[0] / 15
+	yy = pos[0] % 15
 
-	print '(', x + 1, y + 1, ')'
+	#print '(', x + 1, y + 1, ')'
+	return xx, yy
 
+# If train delete the following words
+X, POS = build_graph()

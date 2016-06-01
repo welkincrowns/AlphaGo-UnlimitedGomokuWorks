@@ -1,2 +1,3 @@
 import pSigma
-pSigma.player('a.in')
+print pSigma.player('player.log')
+print pSigma.player('player.log')
