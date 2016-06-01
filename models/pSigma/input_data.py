@@ -1,7 +1,6 @@
 import numpy as np
 
 class DataSet(object):
-
   def __init__(self, state, action):
     self._state = state
     self._action = action
