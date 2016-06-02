@@ -66,8 +66,9 @@ def computer_turn(play_log, boardX, turn):
 	return play_log, boardX
 
 def player_turn(play_log, boardX, turn):
-	x = 7
-	y = 7
+	player = raw_input('Enter your place(such as hH in (8, 8)): ')
+	x = ord(player[0]) - ord('a')
+	y = ord(player[1]) - ord('A')
 	while (abs(boardX[x, y]) > 1e-9):
 		player = raw_input('Enter your place(such as hH in (8, 8)): ')
 		x = ord(player[0]) - ord('a')
@@ -75,7 +76,7 @@ def player_turn(play_log, boardX, turn):
 	boardX[x][y] = turn
 	play_log.append([x, y])
 	return play_log, boardX
-
+'''
 play_log = [];
 boardX = np.zeros((15, 15))
 while (1):
@@ -88,4 +89,18 @@ while (1):
 	[play_log, boardX] = player_turn(play_log, boardX, 2)
 	if (checkwin(boardX, 2)):
 		print 'You Win!'
+		break
+'''
+play_log = [];
+boardX = np.zeros((15, 15))
+while (1):
+	display(boardX)
+	[play_log, boardX] = player_turn(play_log, boardX, 1)
+	if (checkwin(boardX, 1)):
+		print 'You Win!'
+		break
+	[play_log, boardX] = computer_turn(play_log, boardX, 2)
+	print play_log
+	if (checkwin(boardX, 2)):
+		print 'Computer Win!'
 		break
