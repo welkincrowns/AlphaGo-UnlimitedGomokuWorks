@@ -100,7 +100,7 @@ def player(filename):
 	yy = pos[0] % 15
 
 	#print '(', x + 1, y + 1, ')'
-	return xx, yy
+	return xx, yy, y_target
 
 # If train delete the following words
 X, Y, POS = build_graph()

@@ -59,8 +59,8 @@ def checkwin(boardX, turn):
 
 def computer_turn(play_log, boardX, turn):
 	save(play_log)
-	[x, y] = pSigma.player('player.log')
-	print x, y
+	[x, y, distribution] = pSigma.player('player.log')
+	print distribution
 	boardX[x, y] = turn;
 	play_log.append([x, y])
 	return play_log, boardX
