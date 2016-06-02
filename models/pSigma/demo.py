@@ -37,6 +37,24 @@ def checkwin(boardX, turn):
 						ok = 0
 				if (ok):
 					return 1
+	for i in range(15):
+		for j in range(11):
+			if (boardX[i, j] == turn):
+				ok = 1
+				for k in range(5):
+					if (boardX[i, j + k] != turn):
+						ok = 0
+				if (ok):
+					return 1
+	for i in range(11):
+		for j in range(15):
+			if (boardX[i, j] == turn):
+				ok = 1
+				for k in range(5):
+					if (boardX[i + k, j] != turn):
+						ok = 0
+				if (ok):
+					return 1
 	return 0
 
 def computer_turn(play_log, boardX, turn):
