@@ -50,7 +50,7 @@ def read_data(train_size, cv_size, test_size):
 			continue
 		else:
 			M = M + 1
-
+	print M
 	if (M < train_size + cv_size + test_size):
 		print "no enough data!!!"
 
@@ -62,7 +62,7 @@ def read_data(train_size, cv_size, test_size):
 	tot = 0
 
 	for i in range(len(go) / 2):
-		if (i % 1000 == 0):
+		if (i % 100000 == 0 and i > 0):
 			print 'read in %d actions' % i;
 		x = go[2 * i]
 		y = go[2 * i + 1]
@@ -109,8 +109,8 @@ def read_data(train_size, cv_size, test_size):
 		if (tot >= M):
 			break
 
-	print data_state.shape
-	print tot
+	# print data_state.shape
+	# print tot
 	
 	class DataSets(object):
 		pass
@@ -123,4 +123,4 @@ def read_data(train_size, cv_size, test_size):
 
 	return data_sets
 
-#read_data(10000, 200, 100)
+# read_data(10000, 200, 100)

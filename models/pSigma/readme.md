@@ -1,3 +1,7 @@
+## 2016-06-02
+
+- 原来的pSigma.py拆成了pSigma.py(调用)和pSigma_train.py(训练)
+
 ## 2016-06-01 #2
 
 - demo just for fun
