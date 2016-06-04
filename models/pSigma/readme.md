@@ -1,3 +1,7 @@
+## 2016-06-04
+
+- 更新了pSigma.py使得把tensorflow的初始化和调用分离，现在200组只要0.89s
+
 ## 2016-06-02
 
 - 原来的pSigma.py拆成了pSigma.py(调用)和pSigma_train.py(训练)

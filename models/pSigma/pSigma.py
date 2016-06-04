@@ -67,40 +67,38 @@ def read_data(filename):
 	data_state[0] = feature
 	return data_state
 
-def build_graph():
-	with tf.name_scope('input'):
-		x = tf.placeholder(tf.float32, [1, 15, 15, 5], 'input_layer')
-
-	# neural network
-	hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 192], 192, 'conv_layer_1')
-	hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 192, 24], 24, 'conv_layer_2')
-	hidden_conv_layer3 = nn_layer(1, hidden_conv_layer2, [3, 3, 24, 24], 24, 'conv_layer_3')
-	hidden_conv_layer4 = nn_layer(1, hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
-	hidden_conv_layer5 = nn_layer(1, hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
-	hidden_conv_layer6 = nn_layer(1, hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
-	y = nn_layer(1, hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tf.nn.softmax, True)
-	v = tf.argmax(y, 1);
-	return x, y, v
-
 def player(filename):
 	data = read_data(filename)
-	# print data.shape
 
-	saver = tf.train.Saver()
-	init = tf.initialize_all_variables()
+	# play
+	y_target, pos = sess.run([Y, POS], feed_dict={X: data})
 
-	# train
-	with tf.Session() as sess:
-		sess.run(init)
-		saver.restore(sess, 'tmp/pSigma.ckpt')
-		y_target, pos = sess.run([Y, POS], feed_dict={X: data})
-
-	print pos
+	# print pos
 	xx = pos[0] / 15
 	yy = pos[0] % 15
-
+	print type(y_target)
 	#print '(', x + 1, y + 1, ')'
 	return xx, yy, y_target
 
-# If train delete the following words
-X, Y, POS = build_graph()
+with tf.name_scope('input'):
+	x = tf.placeholder(tf.float32, [1, 15, 15, 5], 'input_layer')
+
+# neural network
+hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 192], 192, 'conv_layer_1')
+hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 192, 24], 24, 'conv_layer_2')
+hidden_conv_layer3 = nn_layer(1, hidden_conv_layer2, [3, 3, 24, 24], 24, 'conv_layer_3')
+hidden_conv_layer4 = nn_layer(1, hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
+hidden_conv_layer5 = nn_layer(1, hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
+hidden_conv_layer6 = nn_layer(1, hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
+y = nn_layer(1, hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tf.nn.softmax, True)
+v = tf.argmax(y, 1);
+saver = tf.train.Saver()
+init = tf.initialize_all_variables()
+
+X = x
+Y = y
+POS = v
+
+sess = tf.InteractiveSession()
+sess.run(init)
+saver.restore(sess, 'tmp/pSigma.ckpt')

@@ -1,3 +1,3 @@
 import pSigma
-print pSigma.player('player.log')
-print pSigma.player('player.log')
+for i in range(100):
+	pSigma.player('player.log')
