@@ -1,0 +1,17 @@
+## Notes of reading ForbiddenPointFinder
+- 作为参数的x, y均从0开始
+- cStone = BLACKSTONE/WHITESTONE/EMPTYSTONE
+- nColor = 0(black)/1(white)
+- nDir = 1(horizontal)/2(vertial)/3(diagonal'/')/4(diagonal'\')
+- Clear(): 清空棋盘
+- AddStone(x, y, cStone): 在(x, y)下cStone，返回BLACKFIVE/BLACKFORBIDDEN/WHITEFIVE/-1，若为-1会调用FindForbiddenPoints()，否则将nForbiddenPoints设为0
+- SetStone(x, y, cStone): 将(x, y)设为cStone
+- IsFive(x, y, nColor): 对于黑，返回在(x, y)下后是否五连；对于白，返回在(x, y)下后是否成五
+- IsOverline(x, y): 对于黑，返回在(x, y)下后是否长连（若存在五连返回假）
+- IsFive(x, y, nColor, nDir): 返回在(x, y)下后在nDir方向是否五连
+- IsFour(x, y, nColor, nDir): 若IsFive(x, y, nColor)为真或对于黑IsOverline(x, y)为真则返回假，否则返回在nDir方向上再下一步是否五连
+- IsOpenFour(x, y, nColor, nDir): 若IsFive(x, y, nColor)为真或对于黑IsOverline(x, y)为真则返回0，否则返回黑在nDir方向上再下一步是否有两种选择构成五连，若是且当前连续长度为4则返回1，不为4则返回2
+- IsDoubleFour(x, y): 若IsFive(x, y, 0)为真则返回假，否则返回四个方向上Four的总个数是否至少为2
+- IsOpenThree(x, y, nColor, nDir): 若IsFive(x, y, nColor)为真或对于黑IsOverline(x, y)为真则返回0，否则返回黑在nDir方向上再下一步是否在所下位置IsOpenFour返回1且IsDoubleFour与IsDoubleThree均为假
+- IsDoubleThree(x, y): 若IsFive(x, y, 0)为真则返回假，否则返回四个方向上OpenThree的总个数是否至少为2
+- FindForbiddenPoints(): 寻找所有黑禁手的位置，存入ptForbidden
