@@ -134,7 +134,7 @@ int main() {
         int rule;
         double result;
         sscanf(str, "%*s%*s%*s%*s%*s rule=\"%d\"%*s%*s bresult=\"%lf\"", &rule, &result);
-        if (rule != 1 || fabs(result - 0.5) < 1e-6) {
+        if (rule != 1) {
             fgets(str, LEN, fin);
             fgets(str, LEN, fin);
             if (str[1] == 'i')
@@ -176,25 +176,31 @@ int main() {
             ++count;
             for (int i = 0; i < moves.length(); i += 2)
                 fprintf(fou, "1\n%d\n%d\n", moves[i] + 1, moves[i + 1] + 1);
-            int winner = fabs(result - 1) < 1e-6 ? BLACK : WHITE;
-            start = clock();
-            pair<bool, string> temp = Search(board, color, winner);
-            if (temp.first == (color == winner)) {
-                ++win;
-                char filename[10];
-                sprintf(filename, "ForRenLib/%d.rif", win);
-                FILE* fout = fopen(filename, "w");
-                fprintf(fout, "<?xml version=\"1.0\"?>\n<database>\n<games>\n<game>\n<move>");
-                fprintf(fout, "%c%d", moves[0] + 'a', moves[1] + 1);
-                for (int i = 2; i < moves.length(); i += 2)
-                    fprintf(fout, " %c%d", moves[i] + 'a', moves[i + 1] + 1);
-                for (int i = temp.second.length() - 1; i >= 0; i -= 2)
-                    fprintf(fout, " %c%d", temp.second[i] + 'a', temp.second[i - 1] + 1);
-                fprintf(fout, "</move>\n</game>\n</games>\n</database>\n%d\n", int(moves.length()) / 2);
-                fclose(fout);
-                for (int i = temp.second.length() - 1; i >= 0; i -= 2) {
-                    fprintf(fou, "%d\n%d\n%d\n", color == winner ? 1 : 0, temp.second[i] + 1, temp.second[i - 1] + 1);
-                    color ^= 1;
+
+            // result = 0.5
+            if (fabs(result - 0.5) < 1e-6)
+                fprintf(fou, "-1\n-1\n-1\n");
+            else{
+                int winner = fabs(result - 1) < 1e-6 ? BLACK : WHITE;
+                start = clock();
+                pair<bool, string> temp = Search(board, color, winner);
+                if (temp.first == (color == winner)) {
+                    ++win;
+                    char filename[10];
+                    sprintf(filename, "ForRenLib/%d.rif", win);
+                    FILE* fout = fopen(filename, "w");
+                    fprintf(fout, "<?xml version=\"1.0\"?>\n<database>\n<games>\n<game>\n<move>");
+                    fprintf(fout, "%c%d", moves[0] + 'a', moves[1] + 1);
+                    for (int i = 2; i < moves.length(); i += 2)
+                        fprintf(fout, " %c%d", moves[i] + 'a', moves[i + 1] + 1);
+                    for (int i = temp.second.length() - 1; i >= 0; i -= 2)
+                        fprintf(fout, " %c%d", temp.second[i] + 'a', temp.second[i - 1] + 1);
+                    fprintf(fout, "</move>\n</game>\n</games>\n</database>\n%d\n", int(moves.length()) / 2);
+                    fclose(fout);
+                    for (int i = temp.second.length() - 1; i >= 0; i -= 2) {
+                        fprintf(fou, "%d\n%d\n%d\n", color == winner ? 1 : 0, temp.second[i] + 1, temp.second[i - 1] + 1);
+                        color ^= 1;
+                    }
                 }
             }
             fprintf(fou, "-1\n-1\n-1\n");

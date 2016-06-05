@@ -2,8 +2,8 @@
 <database>
 <games>
 <game>
-<move>h8 i9 h6 h9 j9 j8 h10 f8 f7 g6 e9 f10 f11 k8 e10 e11 d9 c8 c9 f9 d8 e7 d6 d7 b9 a9 f4 e5 e6 c6 e8 d12 c13 l8 m8 k7 c4 d5 e4 d4 e12 f13 g5 e3 d13 c14 h4 h5 c12 b11 f6 k6 k5 j6 c5 j7 l6 i6 g4 l9</move>
+<move>h8 i9 j9 j8 h11 h10 g11 i11 i10 g12 k7 g9 f8 j12 k13 h12 i12 k9 j10 f9 k10 e9 h9 e10 h13 j11 l11 m12 l13 j13 l10 m10 l12 l9 l14</move>
 </game>
 </games>
 </database>
-54
+29
