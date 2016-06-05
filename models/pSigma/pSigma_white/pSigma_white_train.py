@@ -69,7 +69,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 	order = 'o'
 	'''while ((order != 'y') & (order != 'N')):
 		order = raw_input('Continue the train last time? [y/N]')'''
-	order = 'N'
+	order = 'y'
 
 	train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 	saver = tf.train.Saver()
