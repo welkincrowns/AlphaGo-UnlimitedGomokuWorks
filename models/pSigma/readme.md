@@ -1,3 +1,53 @@
+## 2016-06-05
+
+- 写了Oracle类
+- 把之前的pSigma分成了两个部分，白的和黑的分别训练，在目录"pSigma/pSigma_white"和"pSigma/pSigma_black"下。
+
+
+### Oracle类
+
+主要负责调用tensorflow求出cnn对于当前的feature的分布
+
+在使用所有的Oracle类之前需要写
+
+	Py_Initialize();
+
+使用完之后需要写
+
+	Py_Finalize();
+
+#### Oracle类(Abstract)
+
+##### Oracle(argc, argv[], model_name);
+
+构造函数，前两个参数用main里面的参数去填，后一个是调用python的程序的名字(比如说"pSigma_white")
+
+##### void Execute(steps, feature_filename, distribution_filename)
+
+steps是具体的双方轮流走的位置(从0开始标号)
+
+feature_filename是你的WriteFeature和python中read_data过程中存储feature的文件名
+
+distribution_filename是你的ReadDistribution和python中player过程中存储distribution的文件名
+
+##### void WriteFeature(steps, feature_filename)
+
+需要实现
+
+##### void ReadDistribution(distribution_filename)
+
+需要实现
+
+#### pSigmaOracle类
+
+##### void WriteFeature(steps, feature_filename)
+
+直接输出了所有的步骤
+
+##### void ReadDistribution(distribution_filename)
+
+直接读如distribution，位置(x,y)的概率分布为distribution[x * 15 + y]
+
 ## 2016-06-04
 
 - 更新了pSigma.py使得把tensorflow的初始化和调用分离，现在200组只要0.89s
