@@ -23,7 +23,7 @@
 - input_data.py 训练集
 - a.in 临时文件，可以用来测试结果
 - execute.py 调用pSigma.py的程序，在a.in里面输入之前的下棋的步骤，可以跑出神经网络的结果
-- callp.cpp 用c++调用python的程序，现在调不了，求差错。
+- callp.cpp 用c++调用python的程序，<del>现在调不了，求差错</del>。
 - tmp/pSigma.ckpt 之前训练的结果。
 - data/pSigma.ckpt 同上，备份用。
 
