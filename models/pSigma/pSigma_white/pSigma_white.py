@@ -105,4 +105,4 @@ POS = v
 
 sess = tf.InteractiveSession()
 sess.run(init)
-saver.restore(sess, 'tmp/pSigma.ckpt')
+saver.restore(sess, 'pSigma_white.ckpt')
