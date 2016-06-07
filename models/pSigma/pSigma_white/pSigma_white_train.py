@@ -86,7 +86,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		if (order == 'y'):
 			saver.restore(sess, 'tmp/pSigma_white.ckpt')
 
-		for i in range(10000):
+		for i in range(50000):
 			if (i % 100 == 0):
 				sacc = 0
 				slos = 0
@@ -116,5 +116,5 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
 
 # training(492, 100, 100, 1, 0.003)
-training(218853, 60000, 60000, 100, 0.00075)
+training(218853, 60000, 60000, 100, 0.0003)
 
