@@ -71,7 +71,6 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		order = raw_input('Continue the train last time? [y/N]')'''
 	order = 'N'
 
-	train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 	saver = tf.train.Saver()
 	init = tf.initialize_all_variables()
 	merged = tf.merge_all_summaries()
@@ -79,6 +78,8 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 	max_acc = 0
 
 	rec = []
+
+	file_ob = open('traing.txt', 'w+')
 
 	# train
 	with tf.Session() as sess:
@@ -88,7 +89,9 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		if (order == 'y'):
 			saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
-		for i in range(20000):
+		for i in range(10000 * 10):
+			if (i % 10000 == 0):
+				training_rate = training_rate / 2.0;
 			if (i % 100 == 0):
 				sacc = 0
 				slos = 0
@@ -110,7 +113,13 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 					max_acc = acc
 				save_path = saver.save(sess, 'tmp/pSigma_black.ckpt')
 				# print 'successfully saved in path', save_path
-			else: 
+
+				file_ob = open('traing.txt', 'w+')
+				for j in range(i / 100 + 1):
+					file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100, rec[j][0], rec[j][1]))
+				file_ob.close()
+			else:
+				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 				batch_xs, batch_ys = gomoku.train.next_batch(training_batch_size)
 				summary, _, yt, lossv  = sess.run([merged, train_step, y, loss], feed_dict={x: batch_xs, y_: batch_ys})
 				train_writer.add_summary(summary, i)
@@ -119,11 +128,6 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		#print 'The final accuracy of test set'
 		#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
 
-	file_ob = open('traing.txt', 'w+')
-	for i in range(20000 / 100):
-		file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (i * 100, rec[i][0], rec[i][1]))
-	file_ob.close()
-
 #training(492, 100, 100, 1, 0.003)
-training(326701 - 120000, 60000, 60000, 100, 0.003)
+training(326701 - 120000, 60000, 60000, 100, 0.006)
 
