@@ -116,5 +116,5 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
 
 # training(492, 100, 100, 1, 0.003)
-training(218853, 60000, 60000, 100, 0.003)
+training(218853, 60000, 60000, 100, 0.00075)
 

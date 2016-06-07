@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def random_value(shape):
-	return tf.random_normal(shape = shape, mean = 0, stddev = 0.05, dtype = tf.float32)
+	return tf.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tf.float32)
 def weight_variable(shape):
 	return tf.Variable(random_value(shape), name = 'weight')
 def biases_variable(shape):
@@ -78,6 +78,8 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 	max_acc = 0
 
+	rec = []
+
 	# train
 	with tf.Session() as sess:
 		train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
@@ -86,7 +88,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		if (order == 'y'):
 			saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
-		for i in range(10000):
+		for i in range(20000):
 			if (i % 100 == 0):
 				sacc = 0
 				slos = 0
@@ -98,6 +100,8 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 				av_acc = sacc / (cv_size / training_batch_size)
 				av_los = slos / (cv_size / training_batch_size)
+
+				rec.append([av_acc, av_los])
 
 				test_writer.add_summary(summary, i)
 				#if ((i % 250 == 0) | ((i % 50 == 0) & (i < 250))):
@@ -115,6 +119,11 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		#print 'The final accuracy of test set'
 		#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
 
-# training(492, 100, 100, 1, 0.003)
-training(218853, 60000, 60000, 100, 0.003)
+	file_ob = open('traing.txt', 'w+')
+	for i in range(20000 / 100):
+		file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (i * 100, rec[i][0], rec[i][1]))
+	file_ob.close()
+
+#training(492, 100, 100, 1, 0.003)
+training(326701 - 120000, 60000, 60000, 100, 0.003)
 
