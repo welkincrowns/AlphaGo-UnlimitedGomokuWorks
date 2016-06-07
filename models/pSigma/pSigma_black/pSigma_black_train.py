@@ -79,8 +79,6 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 	rec = []
 
-	file_ob = open('traing.txt', 'w+')
-
 	# train
 	with tf.Session() as sess:
 		train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
@@ -89,7 +87,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		if (order == 'y'):
 			saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
-		for i in range(10000 * 10):
+		for i in range(10000 * 20):
 			if (i % 10000 == 0):
 				training_rate = training_rate / 2.0;
 			if (i % 100 == 0):
