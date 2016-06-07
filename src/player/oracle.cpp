@@ -1,4 +1,5 @@
-#include "oracle.h"
+#include "Oracle.h"
+#include "Move.h"
 #include <fstream>
 #include <iostream>
 
@@ -15,7 +16,7 @@ Oracle::Oracle(int argc, char* argv[], const std::string& model_name) : pModule(
 	}
 }
 
-void Oracle::Execute(const std::vector<std::pair<int, int> >& steps, const std::string& feature_filename, const std::string& distribution_filename){
+void Oracle::Execute(const std::vector<Move>& steps, const std::string& feature_filename, const std::string& distribution_filename){
 	// write feature
 	WriteFeature(steps, feature_filename);
 
@@ -43,14 +44,14 @@ Oracle::~Oracle(){
 	// empty
 }
 
-void pSigmaOracle::WriteFeature(const std::vector<std::pair<int, int> >& steps, const std::string& filename){
+void pSigmaOracle::WriteFeature(const std::vector<Move>& steps, const std::string& filename){
 	std::ofstream out(filename.c_str());
 	if (!out.is_open()){
 		std::cout << "pSigmaOracle::WriteFeature() ERROR: can't open file!" << std::endl;
 		assert(0);
 	}
 	for (int i = 0; i < steps.size(); ++i)
-		out << steps[i].first << std::endl << steps[i].second << std::endl;
+		out << steps[i].x + 1 << std::endl << steps[i].y + 1 << std::endl;
 	out.close();
 }
 

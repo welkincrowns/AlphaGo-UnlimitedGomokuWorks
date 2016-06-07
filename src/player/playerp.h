@@ -1,29 +1,12 @@
-#ifndef PLATERP_H_
-#define PLATERP_H_
+#ifndef PLAYERP_H_
+#define PLAYERP_H_
 
 #include "Chessboard.h"
+#include "Oracle.h"
+#include "Move.h"
+#include <iostream>
 
-class move{
-public:
-	int x, y, turn;
-	move(int _x, int _y, int _turn) : x(_x), y(_y), turn(_turn) {}
-	move(const move &b){
-		if (&b == this)
-			return;
-		this->x = b.x;
-		this->y = b.y;
-		this->turn = b.turn;
-	}
-	move& operator = (const move&b){
-		this->x = b.x;
-		this->y = b.y;
-		this->turn = b.turn;
-		return *this;
-	}
-	~move();
-};
-
-class GomokuBoard : Chessboard{
+class GomokuBoard : public Chessboard{
 	// Just for a better name
 };
 
@@ -31,18 +14,19 @@ class Player{
 public:
 	Player() {}
 	virtual ~Player() {}
-	virtual move PlacePawn(const std::vector<move> steps) = 0;
+	virtual Move PlacePawn(const std::vector<Move> steps) = 0;
 private:
 	// Forbid it
 	Player(const Player&);
-	Player& operator = (const Play&);
+	Player& operator = (const Player&);
 };
 
 class GomokuPlayer : public Player{
+protected:
 	GomokuBoard *board;
 public:
 	GomokuPlayer(GomokuBoard *_board) : Player(), board(_board) {}
-	~GomokuPlayer();
+	~GomokuPlayer() {}
 private:
 	// Forbid it
 	GomokuPlayer(const GomokuPlayer&);
@@ -50,20 +34,50 @@ private:
 };
 
 class PsigmaGomokuPlayer : public GomokuPlayer{
-	pSigmaOracle psigma_black, psigma_white;
+	pSigmaOracle psigma;
+	const std::string feature_file, distribution_file;
+	const int TURN;
 public:
-	PsigmaGomokuPlayer(int argc, char* argv[], GomokuBoard *_board,
-						const std::string& black_model_name = "pSigma_black",
-						const std::string& white_model_name = "pSigma_white")
+	// the defult setting is that PsigmaGomokuPlayer plays white
+	// you can also create a PsigmaGomokuPlayer object which plays black
+	// the recommended call is
+	//      std::string mn = "pSigma_black", ff = "pSigma_black_feature.al", df = "pSigma_black_distribution.al";
+	//      PsigmaGomokuPlayer(argc, argv, board, 0, mn, ff, df)
+	PsigmaGomokuPlayer(int argc, char* argv[], GomokuBoard *_board, int turn = 1,
+						const std::string& model_name = "pSigma_white",
+						const std::string& _feature_file = "pSigma_white_feature.al",
+						const std::string& _distribution_file = "pSigma_white_distribution.al")
 						: GomokuPlayer(_board),
-						  psigma_black(argc, argv, black_model_name),
-						  pSigma_white(argc, argv, white_model_name) {
+						  psigma(argc, argv, model_name),
+						  TURN(turn),
+						  feature_file(_feature_file),
+						  distribution_file(_distribution_file) {
 		std::cout << "Trace on" << std::endl;
 	}
-	move PlacePawn(const std::vector<move> steps);
+	// directly call the psigma deep neural network to get the answer
+	Move PlacePawn(const std::vector<Move> steps);
 	~PsigmaGomokuPlayer() {}
 private:
 	// Forbid it
 	PsigmaGomokuPlayer(const PsigmaGomokuPlayer&);
-	PsigmaGomokuPlayer& operator = (const PsigmaGomokuPlayer&);	
+	PsigmaGomokuPlayer& operator = (const PsigmaGomokuPlayer&);
 };
+
+class HumanGomokuPlayer : public GomokuPlayer{
+	const int TURN;
+public:
+	HumanGomokuPlayer(GomokuBoard *_board, int turn = 0) : GomokuPlayer(_board), TURN(turn) {
+		// empty
+	}
+	// print the board to the screen and let the human player to place pawn
+	Move PlacePawn(const std::vector<Move> steps);
+	~HumanGomokuPlayer() {}
+private:
+	// print the board to the screen
+	void DisplayBoard(const std::string& info, const std::vector<Move>& steps);
+	// Forbid it
+	HumanGomokuPlayer(const HumanGomokuPlayer&);
+	HumanGomokuPlayer& operator = (const HumanGomokuPlayer&);
+};
+
+#endif // PLATER_H_
