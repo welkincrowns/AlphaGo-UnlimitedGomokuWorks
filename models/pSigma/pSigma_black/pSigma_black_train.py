@@ -71,61 +71,64 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		order = raw_input('Continue the train last time? [y/N]')'''
 	order = 'N'
 
-	saver = tf.train.Saver()
-	init = tf.initialize_all_variables()
-	merged = tf.merge_all_summaries()
+	for k in range(20):
+		training_rate = training_rate / 2.0;
+		saver = tf.train.Saver()
+		train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
+		init = tf.initialize_all_variables()
+		merged = tf.merge_all_summaries()
+		
 
-	max_acc = 0
+		max_acc = 0
 
-	rec = []
+		rec = []
 
-	# train
-	with tf.Session() as sess:
-		train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
-		test_writer = tf.train.SummaryWriter('tmp/pSigma_black/test', sess.graph)
-		sess.run(init)
-		if (order == 'y'):
-			saver.restore(sess, 'tmp/pSigma_black.ckpt')
+		# train
+		with tf.Session() as sess:
+			train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
+			test_writer = tf.train.SummaryWriter('tmp/pSigma_black/test', sess.graph)
 
-		for i in range(10000 * 20):
-			if (i % 10000 == 0):
-				training_rate = training_rate / 2.0;
-			if (i % 100 == 0):
-				sacc = 0
-				slos = 0
-				for j in range(cv_size / training_batch_size):
-					batch_xs, batch_ys = gomoku.crossvalidation.next_batch(training_batch_size)
-					summary, acc, los = sess.run([merged, accuracy, loss], feed_dict={x: batch_xs, y_: batch_ys})
-					sacc = sacc + acc
-					slos = slos + los
+			sess.run(init)
+			if (order == 'y'):
+				saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
-				av_acc = sacc / (cv_size / training_batch_size)
-				av_los = slos / (cv_size / training_batch_size)
+			for i in range(10001):
+				if (i % 100 == 0):
+					sacc = 0
+					slos = 0
 
-				rec.append([av_acc, av_los])
+					for j in range(cv_size / training_batch_size):
+						batch_xs, batch_ys = gomoku.crossvalidation.next_batch(training_batch_size)
+						summary, acc, los = sess.run([merged, accuracy, loss], feed_dict={x: batch_xs, y_: batch_ys})
+						sacc = sacc + acc
+						slos = slos + los
 
-				test_writer.add_summary(summary, i)
-				#if ((i % 250 == 0) | ((i % 50 == 0) & (i < 250))):
-				print 'Step %s: Accuracy(%s), Loss(%s)' % (i, av_acc, av_los)
-				if (sacc > max_acc):
-					max_acc = acc
-				save_path = saver.save(sess, 'tmp/pSigma_black.ckpt')
-				# print 'successfully saved in path', save_path
+					av_acc = sacc / (cv_size / training_batch_size)
+					av_los = slos / (cv_size / training_batch_size)
 
-				file_ob = open('traing.txt', 'w+')
-				for j in range(i / 100 + 1):
-					file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100, rec[j][0], rec[j][1]))
-				file_ob.close()
-			else:
-				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
-				batch_xs, batch_ys = gomoku.train.next_batch(training_batch_size)
-				summary, _, yt, lossv  = sess.run([merged, train_step, y, loss], feed_dict={x: batch_xs, y_: batch_ys})
-				train_writer.add_summary(summary, i)
-				# print 'Loss at step %s : %s' % (i, lossv)
+					rec.append([av_acc, av_los])
 
-		#print 'The final accuracy of test set'
-		#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
+					test_writer.add_summary(summary, i)
+					#if ((i % 250 == 0) | ((i % 50 == 0) & (i < 250))):
+					print 'Step %s: Accuracy(%s), Loss(%s)' % (i + k * 10000, av_acc, av_los)
+					if (sacc > max_acc):
+						max_acc = acc
+					save_path = saver.save(sess, 'tmp/pSigma_black.ckpt')
+					# print 'successfully saved in path', save_path
 
-#training(492, 100, 100, 1, 0.003)
+					file_ob = open('traing.txt', 'w+')
+					for j in range(i / 100 + 1):
+						file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100 + k * 10000, rec[j][0], rec[j][1]))
+					file_ob.close()
+				else:
+					batch_xs, batch_ys = gomoku.train.next_batch(training_batch_size)
+					summary, _, yt, lossv  = sess.run([merged, train_step, y, loss], feed_dict={x: batch_xs, y_: batch_ys})
+					train_writer.add_summary(summary, i)
+					# print 'Loss at step %s : %s' % (i, lossv)
+
+			#print 'The final accuracy of test set'
+			#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
+
+# training(492, 100, 100, 1, 0.003)
 training(326701 - 120000, 60000, 60000, 100, 0.006)
 
