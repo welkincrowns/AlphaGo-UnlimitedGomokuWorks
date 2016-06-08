@@ -14,8 +14,10 @@ def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act
 	with tf.name_scope(layer_name):
 		with tf.name_scope('weights'):
 			weights = weight_variable(weight_shape);
+			variable_set[weights.name] = weights
 		with tf.name_scope('biases'):
 			biases = biases_variable([num_filter])
+			variable_set[biases.name] = biases
 		with tf.name_scope('conv_combination'):
 			z = conv2d(input_tensor, weights) + biases
 		with tf.name_scope('activation'):
@@ -74,12 +76,11 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 	rec = []
 	for k in range(20):
 		training_rate = training_rate / 2.0;
-		saver = tf.train.Saver()
+		saver = tf.train.Saver(variable_set)
 		train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 		init = tf.initialize_all_variables()
 		merged = tf.merge_all_summaries()
 		
-
 		max_acc = 0
 
 		# train
@@ -129,6 +130,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 			#print 'The final accuracy of test set'
 			#print sess.run(accuracy, feed_dict={x: gomoku.test.state, y_: gomoku.test.action})
 
+variable_set = {}
 # training(492, 100, 100, 1, 0.003)
 training(326701 - 120000, 60000, 60000, 100, 0.006)
 
