@@ -117,7 +117,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 					# print 'successfully saved in path', save_path
 
 					file_ob = open('traing.txt', 'w+')
-					for j in range(i / 100 + 1):
+					for j in range(len(rec)):
 						file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100 + k * 10000, rec[j][0], rec[j][1]))
 					file_ob.close()
 				else:
