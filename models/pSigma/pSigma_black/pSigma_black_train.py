@@ -71,6 +71,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 		order = raw_input('Continue the train last time? [y/N]')'''
 	order = 'N'
 
+	rec = []
 	for k in range(20):
 		training_rate = training_rate / 2.0;
 		saver = tf.train.Saver()
@@ -81,15 +82,14 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 		max_acc = 0
 
-		rec = []
-
 		# train
 		with tf.Session() as sess:
 			train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
 			test_writer = tf.train.SummaryWriter('tmp/pSigma_black/test', sess.graph)
 
 			sess.run(init)
-			if (order == 'y'):
+			# if (order == 'y'):
+			if (k > 0):
 				saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
 			for i in range(10001):
