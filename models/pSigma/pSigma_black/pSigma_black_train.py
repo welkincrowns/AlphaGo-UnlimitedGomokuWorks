@@ -118,7 +118,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 					file_ob = open('traing.txt', 'w+')
 					for j in range(len(rec)):
-						file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100 + k * 10000, rec[j][0], rec[j][1]))
+						file_ob.write('Step %s: Accuracy(%s), Loss(%s)\n' % (j * 100, rec[j][0], rec[j][1]))
 					file_ob.close()
 				else:
 					batch_xs, batch_ys = gomoku.train.next_batch(training_batch_size)
