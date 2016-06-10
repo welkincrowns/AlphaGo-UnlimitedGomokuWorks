@@ -1,2 +1,0 @@
-model_checkpoint_path: "pSigma_black.ckpt"
-all_model_checkpoint_paths: "pSigma_black.ckpt"
