@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<database>
-<games>
-<game>
-<move>h8 h9 g7 i9 j9 g8 f7 h7 f9 f8 e8 d7 d9 c10 g11 e9 i11 h11 h12 g13 i13 j14 i12 i14 j12 k12 j11 j13 l11 k11 l9 k10 k13 l14 k14 k8 k9 l10 i10 j6 j5 h5 k6 l5 l8 j10 f5 i4 h4 j3 k2 l4 l2 k4 i2 j2 m3 l7 n4 n7 m6 l6 l3 j4 k7 m4</move>
-</game>
-</games>
-</database>
-64
