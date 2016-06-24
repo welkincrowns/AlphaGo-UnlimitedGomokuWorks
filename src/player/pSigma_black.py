@@ -91,8 +91,8 @@ with tf.name_scope('input'):
 
 variable_set = {}
 # neural network
-hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 192], 192, 'conv_layer_1')
-hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 192, 24], 24, 'conv_layer_2')
+hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 81], 81, 'conv_layer_1')
+hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 81, 24], 24, 'conv_layer_2')
 hidden_conv_layer3 = nn_layer(1, hidden_conv_layer2, [3, 3, 24, 24], 24, 'conv_layer_3')
 hidden_conv_layer4 = nn_layer(1, hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
 hidden_conv_layer5 = nn_layer(1, hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
