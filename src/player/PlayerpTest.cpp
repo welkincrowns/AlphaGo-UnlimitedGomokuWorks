@@ -59,8 +59,8 @@ void psigma_white(int argc, char* argv[]){
 int main(int argc, char* argv[]){
 	Py_Initialize();
 	// test psigma_black
-	psigma_black(argc, argv);
+	// psigma_black(argc, argv);
 	// test psigma_white
-	// psigma_white(argc, argv);
+	psigma_white(argc, argv);
 	Py_Finalize();
 }
