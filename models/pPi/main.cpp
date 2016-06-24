@@ -8,7 +8,7 @@ int main() {
     FILE* fin = fopen("data.txt", "r");
     FILE* fout[] = {fopen("data_pPi_black.txt", "w"),
                     fopen("data_pPi_white.txt", "w")};
-    FILE* outlog = fopen("log.txt", "w")
+    FILE* outlog = fopen("log.txt", "w");
     int t, x, y;
 
     // for test
@@ -41,7 +41,7 @@ int main() {
                 fprintf(outlog, "%d tests computed\n", tot);
         }
 
-        if (tot > 10000) break;
+        //if (tot > 10000) break;
     }
     return 0;
 }
