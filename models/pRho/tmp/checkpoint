@@ -1,0 +1,6 @@
+model_checkpoint_path: "pRho_white_11.ckpt"
+all_model_checkpoint_paths: "pRho_black_9.ckpt"
+all_model_checkpoint_paths: "pRho_white_10.ckpt"
+all_model_checkpoint_paths: "pRho_black_10.ckpt"
+all_model_checkpoint_paths: "pRho_black_11.ckpt"
+all_model_checkpoint_paths: "pRho_white_11.ckpt"

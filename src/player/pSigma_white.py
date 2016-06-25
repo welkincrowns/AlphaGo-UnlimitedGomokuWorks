@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def random_value(shape):
-	return tf.random_normal(shape = shape, mean = 0, stddev = 0.05, dtype = tf.float32)
+	return tf.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tf.float32)
 def weight_variable(shape):
 	return tf.Variable(random_value(shape), name = 'weight')
 def biases_variable(shape):
@@ -14,8 +14,10 @@ def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act
 	with tf.name_scope(layer_name):
 		with tf.name_scope('weights'):
 			weights = weight_variable(weight_shape);
+			variable_set[weights.name] = weights
 		with tf.name_scope('biases'):
 			biases = biases_variable([num_filter])
+			variable_set[biases.name] = biases
 		with tf.name_scope('conv_combination'):
 			z = conv2d(input_tensor, weights) + biases
 		with tf.name_scope('activation'):
@@ -87,16 +89,17 @@ def player(filename_input, filename_output):
 with tf.name_scope('input'):
 	x = tf.placeholder(tf.float32, [1, 15, 15, 5], 'input_layer')
 
+variable_set = {}
 # neural network
-hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 192], 192, 'conv_layer_1')
-hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 192, 24], 24, 'conv_layer_2')
+hidden_conv_layer1 = nn_layer(1, x, [5, 5, 5, 81], 81, 'conv_layer_1')
+hidden_conv_layer2 = nn_layer(1, hidden_conv_layer1, [3, 3, 81, 24], 24, 'conv_layer_2')
 hidden_conv_layer3 = nn_layer(1, hidden_conv_layer2, [3, 3, 24, 24], 24, 'conv_layer_3')
 hidden_conv_layer4 = nn_layer(1, hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
 hidden_conv_layer5 = nn_layer(1, hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
 hidden_conv_layer6 = nn_layer(1, hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
 y = nn_layer(1, hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tf.nn.softmax, True)
 v = tf.argmax(y, 1);
-saver = tf.train.Saver()
+saver = tf.train.Saver(variable_set)
 init = tf.initialize_all_variables()
 
 X = x

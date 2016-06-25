@@ -1,0 +1,1 @@
+./ArenaTest 1 100 pRho_black_3.ckpt pRho_white_0.ckpt
