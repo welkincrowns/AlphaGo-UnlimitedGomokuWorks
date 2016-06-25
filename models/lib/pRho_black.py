@@ -70,7 +70,7 @@ def read_data(filename):
 	return data_state
 
 def load_player(filename):
-	prhob_saver.restore(prhob_sess, filename)
+	prhow_saver.restore(prhow_sess, 'swordslot/' + filename)
 	return 'w'
 
 def player(filename_input, filename_output):
@@ -112,4 +112,4 @@ prhob_POS = prhob_v
 
 prhob_sess = tfrb.InteractiveSession()
 prhob_sess.run(prhob_init)
-load_player("pRho_black.ckpt");
+#load_player("pRho_black.ckpt");
