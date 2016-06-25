@@ -118,20 +118,22 @@ def training(training_rate):
 
 	sess = tf.InteractiveSession()
 	sess.run(init)
-	saver.restore(sess, 'swordslot/pRho_black_0.ckpt')
-	saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % 1))
-	saver.restore(sess, 'swordslot/pRho_white_0.ckpt')
-	saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % 1))
+	saver.restore(sess, 'tmp/pRho_black_0.ckpt')
+	saver.save(sess, ('tmp/pRho_black_%d.ckpt' % 1))
+	os.system('cp ' + ('tmp/pRho_black_%d.ckpt' % 1) + ' ' + ('swordslot/pRho_black_%d.ckpt' % 1))
+	saver.restore(sess, 'tmp/pRho_white_0.ckpt')
+	saver.save(sess, ('tmp/pRho_white_%d.ckpt' % 1))
+	os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % 1) + ' ' + ('swordslot/pRho_white_%d.ckpt' % 1))
 	#return
 	num_sword = 1;
 	for i in range(10):
 		
 		#saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
 		
-		for j in range(1):
+		for j in range(8):
 			# choose an enemy before
 			idx = random.randint(0, num_sword - 1)
-			#os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, idx))
+			os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, idx))
 			result, state, action, M = read_data('Arena/round1.log', 1)
 			if (result == 1):
 				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
@@ -140,7 +142,7 @@ def training(training_rate):
 			if (result == 1 or result == 2):
 				init = tf.initialize_all_variables()
 				sess.run(init)
-				saver.restore(sess, 'swordslot/pRho_black_%d.ckpt' % num_sword)
+				saver.restore(sess, 'tmp/pRho_black_%d.ckpt' % num_sword)
 				# print M
 				print 'the result of battle(%d, %d, black):   ' % (i, j), 
 				if (result == 1):
@@ -149,11 +151,12 @@ def training(training_rate):
 					print 'lose'
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
-		saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
+			saver.save(sess, ('tmp/pRho_black_%d.ckpt' % num_sword))
+			os.system('cp ' + ('tmp/pRho_black_%d.ckpt' % num_sword) + ' ' + ('swordslot/pRho_black_%d.ckpt' % num_sword))
 
-		for j in range(1):
+		for j in range(8):
 			idx = random.randint(0, num_sword - 1)
-			#os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (idx, num_sword))
+			os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (idx, num_sword))
 			result, state, action, M = read_data('Arena/round1.log', 2)
 			if (result == 2):
 				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
@@ -162,7 +165,7 @@ def training(training_rate):
 			if (result == 1 or result == 2):
 				init = tf.initialize_all_variables()
 				sess.run(init)
-				saver.restore(sess, 'swordslot/pRho_white_%d.ckpt' % num_sword)
+				saver.restore(sess, 'tmp/pRho_white_%d.ckpt' % num_sword)
 				# print M
 				print 'the result of battle(%d, %d, white):   ' % (i, j), 
 				if (result == 2):
@@ -171,21 +174,29 @@ def training(training_rate):
 					print 'lose'
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
-		saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % num_sword))
+			saver.save(sess, ('tmp/pRho_white_%d.ckpt' % num_sword))
+			os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % num_sword) + ' ' + ('swordslot/pRho_white_%d.ckpt' % num_sword))
 
 		if (i < 100):
-			'''print 'I have created over %d blades, the gain is as follows: ' % (i * 16)
+			print 'I have created over %d blades, the gain is as follows: ' % (i * 16)
 			print 'black', 
 			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
 			print 'white',
-			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))'''
-			saver.restore(sess, 'swordslot/pRho_black_%d.ckpt' % (num_sword))
-			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword + 1)))
-			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword)))
-			saver.restore(sess, 'swordslot/pRho_white_%d.ckpt' % (num_sword))
-			saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % (num_sword + 1)))
-			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword)))
+			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))
+
+			saver.restore(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword)))
+			saver.save(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword + 1)))
+			os.system('cp ' + ('tmp/pRho_black_%d.ckpt' % (num_sword + 1)) + ' ' + ('swordslot/pRho_black_%d.ckpt' % (num_sword + 1)))
+			#saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword)))
+	
+
+			saver.restore(sess, ('tmp/pRho_white_%d.ckpt' % (num_sword)))
+			saver.save(sess, ('tmp/pRho_white_%d.ckpt' % (num_sword + 1)))
+			os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % (num_sword + 1)) + ' ' + ('swordslot/pRho_white_%d.ckpt' % (num_sword + 1)))
+			
 			num_sword = num_sword + 1
+
+
 
 variable_set = {}
 # training(492, 100, 100, 1, 0.003)

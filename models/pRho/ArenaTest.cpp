@@ -19,9 +19,9 @@ int main(int argc, char* argv[]){
 			nw = atoi(argv[3]);
 		/*
 		for (int i = 0; i < nb; ++i)
-			candb[i] = argv[3 + i];
+			candb[i] = argv[4 + i];
 		for (int i = 0; i < nw; ++i)
-			candw[i] = argv[3 + nb + i];
+			candw[i] = argv[4 + nb + i];
 		*/
 		if (nb == 1){
 			PrhoGomokuPlayer player1(argc, argv, NULL, argv[4 + 0], 0, "pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
