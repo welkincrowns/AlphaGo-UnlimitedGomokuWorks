@@ -1,29 +1,29 @@
-import tensorflow as tfb
+import tensorflow as tfrb
 import numpy as np
 
 def random_value(shape):
-	return tfb.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tfb.float32)
+	return tfrb.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tfrb.float32)
 def weight_variable(shape):
-	return tfb.Variable(random_value(shape), name = 'weight')
+	return tfrb.Variable(random_value(shape), name = 'weight')
 def biases_variable(shape):
-	return tfb.Variable(tfb.constant(0.1, shape = shape), name = 'biases')
+	return tfrb.Variable(tfrb.constant(0.1, shape = shape), name = 'biases')
 def conv2d(x, W):
-	return tfb.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+	return tfrb.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
-def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act = tfb.nn.relu, nd_reshape = False):
-	with tfb.name_scope(layer_name):
-		with tfb.name_scope('weights'):
+def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act = tfrb.nn.relu, nd_reshape = False):
+	with tfrb.name_scope(layer_name):
+		with tfrb.name_scope('weights'):
 			weights = weight_variable(weight_shape);
 			prhob_variable_set[layer_name + '/' + 'weights/weight' + ':0'] = weights
-		with tfb.name_scope('biases'):
+		with tfrb.name_scope('biases'):
 			biases = biases_variable([num_filter])
 			prhob_variable_set[layer_name + '/' + 'biases/biases' + ':0'] = biases
-		with tfb.name_scope('conv_combination'):
+		with tfrb.name_scope('conv_combination'):
 			z = conv2d(input_tensor, weights) + biases
-		with tfb.name_scope('activation'):
+		with tfrb.name_scope('activation'):
 			if nd_reshape:
-				reshape = tfb.reshape(z, [batch_size, 15 * 15])
-				# a = tfb.nn.dropout(act(reshape), 0.8)
+				reshape = tfrb.reshape(z, [batch_size, 15 * 15])
+				# a = tfrb.nn.dropout(act(reshape), 0.8)
 				a = act(reshape)
 			else:
 				a = act(z)
@@ -90,8 +90,8 @@ def player(filename_input, filename_output):
 	yy = pos[0] % 15
 	return xx, yy, y_target
 
-with tfb.name_scope('input'):
-	prhob_x = tfb.placeholder(tfb.float32, [1, 15, 15, 5], 'input_layer')
+with tfrb.name_scope('input'):
+	prhob_x = tfrb.placeholder(tfrb.float32, [1, 15, 15, 5], 'input_layer')
 
 prhob_variable_set = {}
 # neural network
@@ -101,15 +101,15 @@ prhob_hidden_conv_layer3 = nn_layer(1, prhob_hidden_conv_layer2, [3, 3, 24, 24],
 prhob_hidden_conv_layer4 = nn_layer(1, prhob_hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
 prhob_hidden_conv_layer5 = nn_layer(1, prhob_hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
 prhob_hidden_conv_layer6 = nn_layer(1, prhob_hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
-prhob_y = nn_layer(1, prhob_hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tfb.nn.softmax, True)
-prhob_v = tfb.argmax(prhob_y, 1);
-prhob_saver = tfb.train.Saver(prhob_variable_set)
-prhob_init = tfb.initialize_all_variables()
+prhob_y = nn_layer(1, prhob_hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tfrb.nn.softmax, True)
+prhob_v = tfrb.argmax(prhob_y, 1);
+prhob_saver = tfrb.train.Saver(prhob_variable_set)
+prhob_init = tfrb.initialize_all_variables()
 
 prhob_X = prhob_x
 prhob_Y = prhob_y
 prhob_POS = prhob_v
 
-prhob_sess = tfb.InteractiveSession()
+prhob_sess = tfrb.InteractiveSession()
 prhob_sess.run(prhob_init)
 #load_player("pRho_black_00.ckpt");

@@ -1,29 +1,29 @@
-import tensorflow as tfw
+import tensorflow as tfrw
 import numpy as np
 
 def random_value(shape):
-	return tfw.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tfw.float32)
+	return tfrw.random_normal(shape = shape, mean = 0, stddev = 0.01, dtype = tfrw.float32)
 def weight_variable(shape):
-	return tfw.Variable(random_value(shape), name = 'weight')
+	return tfrw.Variable(random_value(shape), name = 'weight')
 def biases_variable(shape):
-	return tfw.Variable(tfw.constant(0.1, shape = shape), name = 'biases')
+	return tfrw.Variable(tfrw.constant(0.1, shape = shape), name = 'biases')
 def conv2d(x, W):
-	return tfw.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+	return tfrw.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
-def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act = tfw.nn.relu, nd_reshape = False):
-	with tfw.name_scope(layer_name):
-		with tfw.name_scope('weights'):
+def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act = tfrw.nn.relu, nd_reshape = False):
+	with tfrw.name_scope(layer_name):
+		with tfrw.name_scope('weights'):
 			weights = weight_variable(weight_shape);
 			prhow_variable_set[layer_name + '/' + 'weights/weight' + ':0'] = weights
-		with tfw.name_scope('biases'):
+		with tfrw.name_scope('biases'):
 			biases = biases_variable([num_filter])
 			prhow_variable_set[layer_name + '/' + 'biases/biases' + ':0'] = biases
-		with tfw.name_scope('conv_combination'):
+		with tfrw.name_scope('conv_combination'):
 			z = conv2d(input_tensor, weights) + biases
-		with tfw.name_scope('activation'):
+		with tfrw.name_scope('activation'):
 			if nd_reshape:
-				reshape = tfw.reshape(z, [batch_size, 15 * 15])
-				# a = tfw.nn.dropout(act(reshape), 0.8)
+				reshape = tfrw.reshape(z, [batch_size, 15 * 15])
+				# a = tfrw.nn.dropout(act(reshape), 0.8)
 				a = act(reshape)
 			else:
 				a = act(z)
@@ -90,8 +90,8 @@ def player(filename_input, filename_output):
 	yy = pos[0] % 15
 	return xx, yy, y_target
 
-with tfw.name_scope('input'):
-	prhow_x = tfw.placeholder(tfw.float32, [1, 15, 15, 5], 'input_layer')
+with tfrw.name_scope('input'):
+	prhow_x = tfrw.placeholder(tfrw.float32, [1, 15, 15, 5], 'input_layer')
 
 prhow_variable_set = {}
 # neural network
@@ -101,15 +101,15 @@ prhow_hidden_conv_layer3 = nn_layer(1, prhow_hidden_conv_layer2, [3, 3, 24, 24],
 prhow_hidden_conv_layer4 = nn_layer(1, prhow_hidden_conv_layer3, [3, 3, 24, 24], 24, 'conv_layer_4')
 prhow_hidden_conv_layer5 = nn_layer(1, prhow_hidden_conv_layer4, [3, 3, 24, 24], 24, 'conv_layer_5')
 prhow_hidden_conv_layer6 = nn_layer(1, prhow_hidden_conv_layer5, [3, 3, 24, 24], 24, 'conv_layer_6')
-prhow_y = nn_layer(1, prhow_hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tfw.nn.softmax, True)
-prhow_v = tfw.argmax(prhow_y, 1);
-prhow_saver = tfw.train.Saver(prhow_variable_set)
-prhow_init = tfw.initialize_all_variables()
+prhow_y = nn_layer(1, prhow_hidden_conv_layer6, [1, 1, 24, 1], 1, 'output_layer', tfrw.nn.softmax, True)
+prhow_v = tfrw.argmax(prhow_y, 1);
+prhow_saver = tfrw.train.Saver(prhow_variable_set)
+prhow_init = tfrw.initialize_all_variables()
 
 prhow_X = prhow_x
 prhow_Y = prhow_y
 prhow_POS = prhow_v
 
-prhow_sess = tfw.InteractiveSession()
+prhow_sess = tfrw.InteractiveSession()
 prhow_sess.run(prhow_init)
 #load_player("pRho_white_00.ckpt");

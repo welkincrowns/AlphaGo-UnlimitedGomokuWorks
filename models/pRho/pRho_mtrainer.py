@@ -126,7 +126,7 @@ def training(training_rate):
 	os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % 1) + ' ' + ('swordslot/pRho_white_%d.ckpt' % 1))
 	#return
 	num_sword = 1;
-	for i in range(1000):
+	for i in range(100):
 		
 		#saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
 		swordnum = 16
@@ -210,10 +210,10 @@ def training(training_rate):
 
 		if ((i + 1) % 2 == 0):
 			
-			if ((i + 1) % 50 == 0):
+			if ((i + 1) % 2 == 0):
 				print 'I have created over %d blades, the gain is as follows: ' % (i * 16 + 16)
-				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
-				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))
+				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt >>result.log' % (num_sword, 0))
+				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt >>result.log' % (0, num_sword))
 
 			saver.restore(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword)))
 			saver.save(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword + 1)))

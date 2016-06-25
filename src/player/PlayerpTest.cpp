@@ -142,7 +142,7 @@ int knowledgeable_battle() {
 int main(int argc, char* argv[]){
 	Py_Initialize();
 	// test psigma_black
-	// psigma_black(argc, argv);
+	psigma_black(argc, argv);
 	// test psigma_white
 	// psigma_white(argc, argv);
 	// test greedy_black
