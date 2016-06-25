@@ -40,7 +40,7 @@ def read_data(filename, nd_turn):
 
 	result = go[0]
 	if (result < 0):
-		return (0, np.zeros((1, 15, 15, 5)), np.zeros(1, 15 * 15), 1)
+		return (0, np.zeros((1, 15, 15, 5)), np.zeros(1, 15 * 15), 0)
 
 	turn = 1
 	M = 0
@@ -59,7 +59,7 @@ def read_data(filename, nd_turn):
 	for i in range((len(go) - 1) / 2):
 		x = go[2 * i + 1]
 		y = go[2 * i + 2]
-
+		# print x, y
 		for i in range(15):
 			for j in range(15):
 				feature[i, j, 0] = 0
@@ -122,17 +122,17 @@ def training(training_rate):
 	saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % 1))
 	saver.restore(sess, 'swordslot/pRho_white_0.ckpt')
 	saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % 1))
-
+	#return
 	num_sword = 1;
-	for i in range(2000):
+	for i in range(10):
 		
-		saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
+		#saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
 		
-		for j in range(8):
+		for j in range(1):
 			# choose an enemy before
 			idx = random.randint(0, num_sword - 1)
-			os.system('./ArenaTest 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, idx))
-			result, state, action, M = read_data('round.log', 1)
+			#os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, idx))
+			result, state, action, M = read_data('Arena/round1.log', 1)
 			if (result == 1):
 				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 			if (result == 2):
@@ -141,14 +141,20 @@ def training(training_rate):
 				init = tf.initialize_all_variables()
 				sess.run(init)
 				saver.restore(sess, 'swordslot/pRho_black_%d.ckpt' % num_sword)
+				# print M
+				print 'the result of battle(%d, %d, black):   ' % (i, j), 
+				if (result == 1):
+					print 'win'
+				else:
+					print 'lose'
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
 		saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
 
-		for j in range(8):
+		for j in range(1):
 			idx = random.randint(0, num_sword - 1)
-			os.system('./ArenaTest 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (idx, num_sword))
-			result, state, action, M = read_data('round.log', 2)
+			#os.system('./ArenaTest 1 1 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (idx, num_sword))
+			result, state, action, M = read_data('Arena/round1.log', 2)
 			if (result == 2):
 				train_step = tf.train.AdamOptimizer(training_rate).minimize(loss)
 			if (result == 1):
@@ -157,20 +163,31 @@ def training(training_rate):
 				init = tf.initialize_all_variables()
 				sess.run(init)
 				saver.restore(sess, 'swordslot/pRho_white_%d.ckpt' % num_sword)
+				# print M
+				print 'the result of battle(%d, %d, white):   ' % (i, j), 
+				if (result == 2):
+					print 'win'
+				else:
+					print 'lose'
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
 		saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % num_sword))
 
-		if (i % 50 == 0 and i > 0):
-			num_sword = num_sword + 1
-			print 'I have created over %d blades, the gain is as follows: ' % (i * 16)
+		if (i < 100):
+			'''print 'I have created over %d blades, the gain is as follows: ' % (i * 16)
 			print 'black', 
-			os.system('./ArenaTest 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
+			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
 			print 'white',
-			os.system('./ArenaTest 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))
-
+			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))'''
+			saver.restore(sess, 'swordslot/pRho_black_%d.ckpt' % (num_sword))
+			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword + 1)))
+			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword)))
+			saver.restore(sess, 'swordslot/pRho_white_%d.ckpt' % (num_sword))
+			saver.save(sess, ('swordslot/pRho_white_%d.ckpt' % (num_sword + 1)))
+			saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % (num_sword)))
+			num_sword = num_sword + 1
 
 variable_set = {}
 # training(492, 100, 100, 1, 0.003)
-training(0.001)
+training(0.0001)
 

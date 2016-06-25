@@ -96,6 +96,9 @@ public:
 	}
 	// directly call the psigma deep neural network to get the answer
 	Move PlacePawn(const std::vector<Move> steps);
+	void setBoard(GomokuBoard *_board){
+		board = _board;
+	}
 	~PrhoGomokuPlayer() {}
 private:
 	// Forbid it

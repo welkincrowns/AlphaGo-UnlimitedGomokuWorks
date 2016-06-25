@@ -41,7 +41,7 @@ double GomokuArena::Play(int show /* = 0 */){
 void GomokuArena::Record(const std::vector<Move>& steps, double result){
 	char filename[22];
 	//sprintf(filename, "Arena/round%d.rif", id);
-	sprintf(filename, "round.log");
+	sprintf(filename, "Arena/round%d.log", id);
 	FILE* fout = fopen(filename, "w");
 	/*fprintf(fout, "<?xml version=\"1.0\"?>\n<database>\n<games>\n<game>\n<move>");
 	fprintf(fout, "%c%d", steps[0].x + 'a', steps[0].y + 1);
