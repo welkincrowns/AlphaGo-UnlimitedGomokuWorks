@@ -24,40 +24,51 @@ int main(int argc, char* argv[]){
 			candw[i] = argv[4 + nb + i];
 		*/
 		if (nb == 1){
-			PrhoGomokuPlayer player1(argc, argv, NULL, argv[4 + 0], 0, "pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
+			PrhoGomokuPlayer player1(argc, argv, NULL, argv[4 + 0], 0, 
+					"pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
 			for (int i = 0; i < nw; ++i){
 				GomokuBoard board;
 				player1.setBoard(&board);
-				PrhoGomokuPlayer player2(argc, argv, &board, argv[4 + nb + i], 1, "pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
+				PrhoGomokuPlayer player2(argc, argv, &board, argv[4 + nb + i], 1, 
+						"pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
 				GomokuArena arena(&player1, &player2, &board);
 				double dt = arena.Play();
 				if (dt > -1e-9)
 					cnt += 1, t += dt;
 			}
-		cout << "The Mean Results: " << t / cnt << " " << cnt << endl;
+			//cout << "The Mean Results: " << t / cnt << " " << cnt << endl;
 		}
 		else{
-			PrhoGomokuPlayer player2(argc, argv, NULL, argv[4 + nb + 0], 1, "pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
+			//cout << argv[4 + nb + 0] << endl;
+			PrhoGomokuPlayer player1(argc, argv, NULL, argv[4 + 0], 0, 
+					"pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
+			PrhoGomokuPlayer player2(argc, argv, NULL, argv[4 + nb + 0], 1, 
+					"pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
 			for (int i = 0; i < nb; ++i){
 				GomokuBoard board;
-				PrhoGomokuPlayer player1(argc, argv, &board, argv[4 + i], 0, "pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
+				//cout << argv[4 + i] << endl;
+				PrhoGomokuPlayer player1(argc, argv, &board, argv[4 + i], 0, 
+						"pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
 				player2.setBoard(&board);
 				GomokuArena arena(&player1, &player2, &board);
 				double dt = arena.Play();
 				if (dt > -1e-9)
 					cnt += 1, t += dt;
-				}
-			cout << "The Mean Results: " << t / cnt << " " << cnt << endl;
+			}
+			//cout << "The Mean Results: " << t / cnt << " " << cnt << endl;
 		}
 	}
 	else{
 		double t = 0;
 		int cnt = 0;
-		PrhoGomokuPlayer player1(argc, argv, NULL, argv[3], 0, "pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
+		PrhoGomokuPlayer player1(argc, argv, NULL, argv[3], 0, 
+				"pRho_black", "pRho_black_feature.al", "pRho_black_distribution.al");
+		PrhoGomokuPlayer player2(argc, argv, NULL, argv[4], 1, 
+				"pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
 		for (int i = 0; i < atoi(argv[2]); ++i){
 			GomokuBoard board;
 			player1.setBoard(&board);
-			PrhoGomokuPlayer player2(argc, argv, &board, argv[4], 1, "pRho_white", "pRho_white_feature.al", "pRho_white_distribution.al");
+			player2.setBoard(&board);
 			GomokuArena arena(&player1, &player2, &board);
 			double dt = arena.Play();
 			if (dt > -1e-9)
@@ -67,6 +78,7 @@ int main(int argc, char* argv[]){
 		//board.Print();
 	}
 
+	//cout << "fff" << endl;
 	Py_Finalize();
 }
 

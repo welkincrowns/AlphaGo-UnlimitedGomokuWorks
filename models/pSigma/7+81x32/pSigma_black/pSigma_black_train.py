@@ -33,9 +33,9 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 	print train_size, test_size, cv_size, training_batch_size, training_rate
 	import input_data
 	gomoku = input_data.read_data(train_size, cv_size, test_size, 1);
-	if tf.gfile.Exists('tmp/pSigma_white'):
-		tf.gfile.DeleteRecursively('tmp/pSigma_white')
-	tf.gfile.MakeDirs('tmp/pSigma_white')
+	if tf.gfile.Exists('tmp/pSigma_black'):
+		tf.gfile.DeleteRecursively('tmp/pSigma_black')
+	tf.gfile.MakeDirs('tmp/pSigma_black')
 
 	# placehold and input
 	with tf.name_scope('input'):
@@ -85,13 +85,13 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 
 		# train
 		with tf.Session() as sess:
-			train_writer = tf.train.SummaryWriter('tmp/pSigma_white/train', sess.graph)
-			test_writer = tf.train.SummaryWriter('tmp/pSigma_white/test', sess.graph)
+			train_writer = tf.train.SummaryWriter('tmp/pSigma_black/train', sess.graph)
+			test_writer = tf.train.SummaryWriter('tmp/pSigma_black/test', sess.graph)
 
 			sess.run(init)
 			# if (order == 'y'):
 			if (k > 0):
-				saver.restore(sess, 'tmp/pSigma_white.ckpt')
+				saver.restore(sess, 'tmp/pSigma_black.ckpt')
 
 			for i in range(20001):
 				if (i % 100 == 0):
@@ -114,7 +114,7 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate)
 					print 'Step %s: Accuracy(%s), Loss(%s)' % (i + k * 20000, av_acc, av_los)
 					if (sacc > max_acc):
 						max_acc = acc
-					save_path = saver.save(sess, 'tmp/pSigma_white.ckpt')
+					save_path = saver.save(sess, 'tmp/pSigma_black.ckpt')
 					# print 'successfully saved in path', save_path
 
 					file_ob = open('traing.txt', 'w+')

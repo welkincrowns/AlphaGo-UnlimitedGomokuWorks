@@ -126,7 +126,7 @@ def training(training_rate):
 	os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % 1) + ' ' + ('swordslot/pRho_white_%d.ckpt' % 1))
 	#return
 	num_sword = 1;
-	for i in range(10):
+	for i in range(100):
 		
 		#saver.save(sess, ('swordslot/pRho_black_%d.ckpt' % num_sword))
 		swordnum = 16
@@ -138,7 +138,7 @@ def training(training_rate):
 		for j in range(swordnum):
 			idx = random.randint(0, num_sword - 1)
 			swordlist = swordlist + (' pRho_white_%d.ckpt' % (idx))
-		print ('./ArenaTest 0 1 %d pRho_black_%d.ckpt' % (swordnum, num_sword)) + swordlist
+		#print ('./ArenaTest 0 1 %d pRho_black_%d.ckpt' % (swordnum, num_sword)) + swordlist
 		os.system(('./ArenaTest 0 1 %d pRho_black_%d.ckpt' % (swordnum, num_sword)) + swordlist)
 		
 		train_step = tf.train.AdamOptimizer(training_rate / swordnum).minimize(loss)
@@ -148,6 +148,7 @@ def training(training_rate):
 		for j in range(swordnum):
 			result, state, action, M = read_data('Arena/round%d.log' % (j + 1), 1)
 			if (result == 1):
+				#print j
 				win_tot = win_tot + 1
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
@@ -162,13 +163,14 @@ def training(training_rate):
 			result, state, action, M = read_data('Arena/round%d.log' % (j + 1), 1)
 			if (result == 2):
 				lose_tot = lose_tot + 1
+				#print j
 				for k in range(M):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
 		saver.save(sess, ('tmp/pRho_black_%d.ckpt' % num_sword))
 		os.system('cp ' + ('tmp/pRho_black_%d.ckpt' % num_sword) + ' ' + ('swordslot/pRho_black_%d.ckpt' % num_sword))
 		print ('black: totally %d blades, win %d blades, loss %d blades' % (swordnum, win_tot, lose_tot))
 		
-		''''
+		
 		# White
 		swordlist = ''
 		win_tot = 0
@@ -176,8 +178,8 @@ def training(training_rate):
 		for j in range(swordnum):
 			idx = random.randint(0, num_sword - 1)
 			swordlist = swordlist + (' pRho_black_%d.ckpt' % (idx))
-		print ('./ArenaTest 0 %d 1%s pRho_black_%d.ckpt' % (swordnum, swordlist, num_sword))
-		os.system(('./ArenaTest 0 %d 1%s pRho_black_%d.ckpt' % (swordnum, swordlist, num_sword)))
+		#print ('./ArenaTest 0 %d 1%s pRho_white_%d.ckpt' % (swordnum, swordlist, num_sword))
+		os.system(('./ArenaTest 0 %d 1%s pRho_white_%d.ckpt' % (swordnum, swordlist, num_sword)))
 		
 		train_step = tf.train.AdamOptimizer(training_rate / swordnum).minimize(loss)
 		init = tf.initialize_all_variables()
@@ -204,11 +206,14 @@ def training(training_rate):
 					sess.run(train_step, feed_dict={x: state[k : k + 1], y_: action[k : k + 1]})
 		saver.save(sess, ('tmp/pRho_white_%d.ckpt' % num_sword))
 		os.system('cp ' + ('tmp/pRho_white_%d.ckpt' % num_sword) + ' ' + ('swordslot/pRho_white_%d.ckpt' % num_sword))
-		print ('black: totally %d blades, win %d blades, loss %d blades' % (swordnum, win_tot, lose_tot))'''
+		print ('white: totally %d blades, win %d blades, loss %d blades' % (swordnum, win_tot, lose_tot))
+
 		if (i < 100):
-			print 'I have created over %d blades, the gain is as follows: ' % (i * 16)
-			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
-			os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))
+			
+			if ((i + 1) % 5 == 0):
+				print 'I have created over %d blades, the gain is as follows: ' % (i * 16 + 16)
+				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (num_sword, 0))
+				os.system('./ArenaTest 1 100 pRho_black_%d.ckpt pRho_white_%d.ckpt' % (0, num_sword))
 
 			saver.restore(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword)))
 			saver.save(sess, ('tmp/pRho_black_%d.ckpt' % (num_sword + 1)))
