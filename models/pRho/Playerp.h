@@ -88,7 +88,7 @@ public:
 						  TURN(turn),
 						  feature_file(_feature_file),
 						  distribution_file(_distribution_file) {
-		    std::cout << "Trace On (player): " << model_name << std::endl;
+		    //std::cout << "Trace On (player): " << model_name << std::endl;
     		// initialize the random number generator with time-dependent seed
     		uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     		std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed>>32)};

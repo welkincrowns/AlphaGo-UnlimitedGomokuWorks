@@ -27,11 +27,11 @@ public:
 		// empty
 		player[0] = player0;
 		player[1] = player1;
-		//std::cout << "Unlimited Gomoku Works" << std::endl;
+		//std::cout << "I have created over " << id << "blades, unaware of a loss, nor aware of gain" << std::endl;
 	}
 	double Play(int show = 0);
 private:
-	void Record(const std::vector<Move>& steps);
+	void Record(const std::vector<Move>& steps, double result);
 	GomokuArena(const GomokuArena&);
 	GomokuArena& operator = (const GomokuArena&);
 };

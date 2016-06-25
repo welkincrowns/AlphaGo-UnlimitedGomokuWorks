@@ -130,8 +130,6 @@ Move PrhoGomokuPlayer::PlacePawn(const std::vector<Move> steps){
 				nws = nwsr;
 			}
 		}
-
-
-	printf("%d %d %d\n", TURN, posi, posj);
+	//printf("%d %d %d\n", TURN, posi, posj);
 	return Move(TURN, posi, posj);
 }

@@ -112,4 +112,4 @@ prhob_POS = prhob_v
 
 prhob_sess = tfb.InteractiveSession()
 prhob_sess.run(prhob_init)
-# load_player("pRho_white_00.ckpt");
+#load_player("pRho_black_00.ckpt");

@@ -72,7 +72,7 @@ void pSigmaOracle::ReadDistribution(const std::string& filename){
 }
 
 pRhoOracle::pRhoOracle(int argc, char* argv[], const std::string& model_name, const std::string& swordname, int _size /*= 225*/) : Oracle(argc, argv, model_name), d_size(_size) {
-	std::cout << "Trace on: " << model_name << std::endl;
+	//std::cout << "Trace on:(Oracle) " << model_name << std::endl;
 	PyObject* pFunc = PyObject_GetAttrString(pModule, "load_player");
 	if (!pFunc){
 		PyErr_Print();
@@ -86,10 +86,11 @@ pRhoOracle::pRhoOracle(int argc, char* argv[], const std::string& model_name, co
 		std::cout << "pRhoOracle::pRhoOracle() ERROR: get result failed!" << std::endl;
 		assert(0);
 	}
+	/*
 	std::string p1;
 	if(PyArg_Parse(pResult, "(s)", &p1)){
 		std::cout << p1 << std::endl;
-	}
+	}*/
 }
 
 void pRhoOracle::WriteFeature(const std::vector<Move>& steps, const std::string& filename){
