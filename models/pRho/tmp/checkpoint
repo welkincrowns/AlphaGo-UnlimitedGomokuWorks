@@ -1,6 +1,6 @@
-model_checkpoint_path: "pRho_black_58.ckpt"
+model_checkpoint_path: "pRho_white_58.ckpt"
 all_model_checkpoint_paths: "pRho_white_56.ckpt"
 all_model_checkpoint_paths: "pRho_black_57.ckpt"
 all_model_checkpoint_paths: "pRho_white_57.ckpt"
-all_model_checkpoint_paths: "pRho_white_58.ckpt"
 all_model_checkpoint_paths: "pRho_black_58.ckpt"
+all_model_checkpoint_paths: "pRho_white_58.ckpt"
