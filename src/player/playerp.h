@@ -63,6 +63,35 @@ private:
 	PsigmaGomokuPlayer& operator = (const PsigmaGomokuPlayer&);
 };
 
+class GreedyGomokuPlayer : public GomokuPlayer{
+	const int TURN;
+public:
+	GreedyGomokuPlayer(GomokuBoard *_board, int turn = 1) : GomokuPlayer(_board), TURN(turn) {
+		// empty
+	}
+	// greedily choose the answer
+	Move PlacePawn(const std::vector<Move> steps);
+	~GreedyGomokuPlayer() {}
+private:
+	// Forbid it
+	GreedyGomokuPlayer(const GreedyGomokuPlayer&);
+	GreedyGomokuPlayer& operator = (const GreedyGomokuPlayer&);
+};
+
+class KnowledgeableGomokuPlayer : public GomokuPlayer{
+	static int built;
+	const int TURN;
+public:
+	KnowledgeableGomokuPlayer(GomokuBoard *_board, int turn = 1);
+	// choose the answer according to knowledge
+	Move PlacePawn(const std::vector<Move> steps);
+	~KnowledgeableGomokuPlayer() {}
+private:
+	// Forbid it
+	KnowledgeableGomokuPlayer(const KnowledgeableGomokuPlayer&);
+	KnowledgeableGomokuPlayer& operator = (const KnowledgeableGomokuPlayer&);
+};
+
 class HumanGomokuPlayer : public GomokuPlayer{
 	const int TURN;
 public:

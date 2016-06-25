@@ -3,6 +3,8 @@
 //
 // Code written by: Wenzhe Lu
 //
+// Modified by: Yi Xu
+//
 //////////////////////////////////////////////////////////////////////
 
 #include "ForbiddenPointFinder.h"
@@ -1319,6 +1321,450 @@ bool CForbiddenPointFinder::IsDoubleThree(int x, int y, int nColor)
 		return true;
 	else
 		return false;
+}
+
+bool CForbiddenPointFinder::IsThree(int x, int y, int nColor, int nDir)
+{
+	if (IsFive(x, y, nColor))	// five?
+		return false;
+	else if ((nColor == 0) && (IsOverline(x, y)))	// black overline?
+		return false;
+	else
+	{
+		char c;
+		if (nColor == 0)	// black
+			c = BLACKSTONE;
+		else if (nColor == 1)	// white
+			c = WHITESTONE;
+		else
+			return false;
+		
+		SetStone(x, y, c);
+
+		int i, j;
+			
+		switch (nDir)
+		{
+		case 1:		// horizontal direction
+			i = x;
+			while (i > 0)
+			{
+				if (cBoard[i][y+1] == c)
+				{
+					i--;
+					continue;
+				}
+				else if (cBoard[i][y+1] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, y, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, y, 0)) && (!IsDoubleThree(i-1, y, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			while (i < (BOARDSIZE+1))
+			{
+				if (cBoard[i][y+1] == c)
+				{
+					i++;
+					continue;
+				}
+				else if (cBoard[i][y+1] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, y, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, y, 0)) && (!IsDoubleThree(i-1, y, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 2:		// vertial direction
+			i = y;
+			while (i > 0)
+			{
+				if (cBoard[x+1][i] == c)
+				{
+					i--;
+					continue;
+				}
+				else if (cBoard[x+1][i] == EMPTYSTONE)
+				{
+					if ((IsFour(x, i-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(x, i-1, 0)) && (!IsDoubleThree(x, i-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = y+2;
+			while (i < (BOARDSIZE+1))
+			{
+				if (cBoard[x+1][i] == c)
+				{
+					i++;
+					continue;
+				}
+				else if (cBoard[x+1][i] == EMPTYSTONE)
+				{
+					if ((IsFour(x, i-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(x, i-1, 0)) && (!IsDoubleThree(x, i-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 3:		// diagonal direction - '/'
+			i = x;
+			j = y;
+			while ((i > 0) && (j > 0))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i--;
+					j--;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			j = y+2;
+			while ((i < (BOARDSIZE+1)) && (j < (BOARDSIZE+1)))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i++;
+					j++;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 4:		// diagonal direction - '\'
+			i = x;
+			j = y+2;
+			while ((i > 0) && (j < (BOARDSIZE+1)))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i--;
+					j++;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			j = y;
+			while ((i < (BOARDSIZE+1)) && (j > 0))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i++;
+					j--;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsFour(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		default:
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		}
+	}
+}
+
+bool CForbiddenPointFinder::IsOpenTwo(int x, int y, int nColor, int nDir)
+{
+	if (IsFive(x, y, nColor))	// five?
+		return false;
+	else if ((nColor == 0) && (IsOverline(x, y)))	// black overline?
+		return false;
+	else
+	{
+		char c;
+		if (nColor == 0)	// black
+			c = BLACKSTONE;
+		else if (nColor == 1)	// white
+			c = WHITESTONE;
+		else
+			return false;
+		
+		SetStone(x, y, c);
+
+		int i, j;
+			
+		switch (nDir)
+		{
+		case 1:		// horizontal direction
+			i = x;
+			while (i > 0)
+			{
+				if (cBoard[i][y+1] == c)
+				{
+					i--;
+					continue;
+				}
+				else if (cBoard[i][y+1] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, y, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, y, 0)) && (!IsDoubleThree(i-1, y, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			while (i < (BOARDSIZE+1))
+			{
+				if (cBoard[i][y+1] == c)
+				{
+					i++;
+					continue;
+				}
+				else if (cBoard[i][y+1] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, y, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, y, 0)) && (!IsDoubleThree(i-1, y, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 2:		// vertial direction
+			i = y;
+			while (i > 0)
+			{
+				if (cBoard[x+1][i] == c)
+				{
+					i--;
+					continue;
+				}
+				else if (cBoard[x+1][i] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(x, i-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(x, i-1, 0)) && (!IsDoubleThree(x, i-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = y+2;
+			while (i < (BOARDSIZE+1))
+			{
+				if (cBoard[x+1][i] == c)
+				{
+					i++;
+					continue;
+				}
+				else if (cBoard[x+1][i] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(x, i-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(x, i-1, 0)) && (!IsDoubleThree(x, i-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 3:		// diagonal direction - '/'
+			i = x;
+			j = y;
+			while ((i > 0) && (j > 0))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i--;
+					j--;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			j = y+2;
+			while ((i < (BOARDSIZE+1)) && (j < (BOARDSIZE+1)))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i++;
+					j++;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		case 4:		// diagonal direction - '\'
+			i = x;
+			j = y+2;
+			while ((i > 0) && (j < (BOARDSIZE+1)))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i--;
+					j++;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else 
+						break;
+				}
+				else
+					break;
+			}
+			i = x+2;
+			j = y;
+			while ((i < (BOARDSIZE+1)) && (j > 0))
+			{
+				if (cBoard[i][j] == c)
+				{
+					i++;
+					j--;
+					continue;
+				}
+				else if (cBoard[i][j] == EMPTYSTONE)
+				{
+					if ((IsOpenThree(i-1, j-1, nColor, nDir) == 1) && (nColor == 1 || (nColor == 0 && (!IsDoubleFour(i-1, j-1, 0)) && (!IsDoubleThree(i-1, j-1, 0)))))
+					{
+						SetStone(x, y, EMPTYSTONE);
+						return true;
+					}
+					else
+						break;
+				}
+				else
+					break;
+			}
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		default:
+			SetStone(x, y, EMPTYSTONE);
+			return false;
+			break;
+		}
+	}
 }
 
 void CForbiddenPointFinder::FindForbiddenPoints()

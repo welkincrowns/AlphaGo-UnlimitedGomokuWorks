@@ -24,8 +24,10 @@ protected:
 	bool IsOverline(int x, int y);
 	bool IsFive(int x, int y, int nColor, int nDir);
 	bool IsFour(int x, int y, int nColor, int nDir);
-	int  IsOpenFour(int x, int y, int nColor, int nDir);
+	int IsOpenFour(int x, int y, int nColor, int nDir);
 	bool IsOpenThree(int x, int y, int nColor, int nDir);
+	bool IsThree(int x, int y, int nColor, int nDir);
+	bool IsOpenTwo(int x, int y, int nColor, int nDir);
 	bool IsDoubleFour(int x, int y, int nColor);
 	bool IsDoubleThree(int x, int y, int nColor);
 	void FindForbiddenPoints();
