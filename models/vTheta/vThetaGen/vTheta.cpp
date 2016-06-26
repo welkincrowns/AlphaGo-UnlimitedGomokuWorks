@@ -41,7 +41,7 @@ int launch(int d){
 	int state = 0;
 	int result = -1;
 	int i = 0, p = rand() % 60;
-	//cout << p << endl;
+	cout << p << endl;
 	while (true){
 		//cout << i << endl;
 		Move a;
@@ -55,6 +55,7 @@ int launch(int d){
 			break;
 		}
 		++ i;
+		if (i == 15 * 15) break;
 		//cout << i << endl;
 		Move b;
 		if (i == p) {b = RandomSpot(steps, 1, false); ++ state;}
@@ -70,6 +71,7 @@ int launch(int d){
 	}
 	
 	if (steps.size() <= p) return 1;
+	if (i == 15 * 15) return 1;
 
 	stringstream ss;
 	ss << "data_" << (d / 100) << ".txt";
