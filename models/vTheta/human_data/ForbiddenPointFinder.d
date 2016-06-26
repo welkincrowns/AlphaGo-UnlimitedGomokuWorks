@@ -1,0 +1,1 @@
+ForbiddenPointFinder.o ForbiddenPointFinder.d: ForbiddenPointFinder.cpp ForbiddenPointFinder.h
