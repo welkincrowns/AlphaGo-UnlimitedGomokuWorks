@@ -70,7 +70,7 @@ def read_data(filename):
 	return data_state
 
 def load_player(filename):
-	prhow_saver.restore(prhow_sess, 'swordslot/' + filename)
+	prhob_saver.restore(prhob_sess, 'swordslot/' + filename)
 	return 'w'
 
 def player(filename_input, filename_output):
