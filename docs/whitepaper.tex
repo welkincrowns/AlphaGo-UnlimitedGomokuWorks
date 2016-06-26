@@ -300,7 +300,7 @@ value network $v_\theta$的结构和$p_\sigma$基本一致
 考虑这次模拟对所有树中边的影响,我们分别更新rollout的值$N_r(s, a), W_r(s, a)$和value network的值$N_v(s, a), W_v(s, a)$,最后更新$Q(s, a)$的值
 
 \[
-Q(s, a) = (1 - \lambda)\frac{W_v(s,a)}{N_v(s,a)}+\lambda\frac{W_r(s,a)}{N_v(s,a)}
+Q(s, a) = (1 - \lambda)\frac{W_v(s,a)}{N_v(s,a)}+\lambda\frac{W_r(s,a)}{N_r(s,a)}
 \]
 
 AlphaGo 中 $\lambda=0.5$的时候效果最好. \textcolor[rgb]{1,0,0}{我们的还在测试中.}
