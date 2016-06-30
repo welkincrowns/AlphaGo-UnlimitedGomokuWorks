@@ -45,9 +45,10 @@ def read_data(train_size, cv_size, test_size):
 	board = np.zeros((15, 15))
 	feature = np.zeros((15, 15, 5))
 
+	M = len(go) / 2
 	for i in range(len(go) / 2):
 		if (go[2 * i] == -1):
-			M = M + 1
+			M = M - 2 - 30
 
 	print M
 	if (M < train_size + cv_size + test_size):
@@ -62,6 +63,7 @@ def read_data(train_size, cv_size, test_size):
 	turn = 1
 	pe = True
 	result = 0
+	steps = 0
 	for ca in range(len(go) / 2):
 		if (pe):
 			pe = False
@@ -70,6 +72,7 @@ def read_data(train_size, cv_size, test_size):
 				print 'read in %d actions' % tot;
 			continue
 
+		steps = steps + 1
 		x = go[2 * ca]
 		y = go[2 * ca + 1]
 
@@ -94,6 +97,7 @@ def read_data(train_size, cv_size, test_size):
 		if ((x == -1) and (y == -1)):
 			board = np.zeros((15, 15))
 			turn = 1
+			steps = 0
 			pe = True
 			# print
 			continue
@@ -103,11 +107,12 @@ def read_data(train_size, cv_size, test_size):
 			label[0] = 1
 		else:
 			label[0] = -1
-		data_state[tot] = feature
-		data_action[tot] = label
-		tot = tot + 1
-		if (tot >= M):
-			break		
+		if (steps >= 30):
+			data_state[tot] = feature
+			data_action[tot] = label
+			tot = tot + 1
+			if (tot >= M):
+				break		
 
 		board[x - 1][y - 1] = turn
 		turn = 3 - turn

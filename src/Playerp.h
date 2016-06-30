@@ -92,6 +92,7 @@ public:
 	KnowledgeableGomokuPlayer(GomokuBoard *_board, int turn = 1);
 	// choose the answer according to knowledge
 	Move PlacePawn(const std::vector<Move> steps);
+	Move MustMove();
 	~KnowledgeableGomokuPlayer() {}
 private:
 	// Forbid it
@@ -104,6 +105,7 @@ class MCTSGomokuPlayer : public GomokuPlayer{
 	const int TIME_LIMIT;
 	const int NTHR;
 	const double LAMBDA;
+	const double CPUCT;
 	pSigmaOracle *psigma_black, *psigma_white;
 	vThetaOracle *vtheta;
 	TreeNode *root;
@@ -111,8 +113,8 @@ class MCTSGomokuPlayer : public GomokuPlayer{
 	std::map<std::pair<int, int>, std::vector<double> > psigma_black_map, psigma_white_map, vtheta_map;
 
 public:
-	MCTSGomokuPlayer(pSigmaOracle *_psigma_black, pSigmaOracle *_psigma_white, vThetaOracle *_vtheta, int turn = 0, int time_limit = 5, int nthr = 5, double lambda = 0.5)
-			: GomokuPlayer(NULL), psigma_black(_psigma_black), psigma_white(_psigma_white), vtheta(_vtheta), root(new TreeNode), TURN(turn), TIME_LIMIT(time_limit), NTHR(nthr), LAMBDA(lambda) {
+	MCTSGomokuPlayer(pSigmaOracle *_psigma_black, pSigmaOracle *_psigma_white, vThetaOracle *_vtheta, int turn = 0, int time_limit = 5, int nthr = 5, double lambda = 1, double cpuct = 5)
+			: GomokuPlayer(NULL), psigma_black(_psigma_black), psigma_white(_psigma_white), vtheta(_vtheta), root(new TreeNode), TURN(turn), TIME_LIMIT(time_limit), NTHR(nthr), LAMBDA(lambda), CPUCT(cpuct) {
 		board = new GomokuBoard;
 		player1 = new KnowledgeableGomokuPlayer(board, 0);
 		player2 = new KnowledgeableGomokuPlayer(board, 1);
@@ -153,9 +155,10 @@ public:
 						  distribution_file(_distribution_file) {
 		    //std::cout << "Trace On (player): " << model_name << std::endl;
     		// initialize the random number generator with time-dependent seed
-    		uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    		std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed>>32)};
-    		rng.seed(ss);
+    		//uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    		//std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed>>32)};
+    		//rng.seed(ss);
+			rng.seed(6);
 	}
 	// directly call the psigma deep neural network to get the answer
 	Move PlacePawn(const std::vector<Move> steps);
@@ -184,6 +187,23 @@ private:
 	// Forbid it
 	HumanGomokuPlayer(const HumanGomokuPlayer&);
 	HumanGomokuPlayer& operator = (const HumanGomokuPlayer&);
+};
+
+class QinAIGomokuPlayer : public GomokuPlayer{
+	const int TURN;
+public:
+	QinAIGomokuPlayer(GomokuBoard *_board, int turn = 0) : GomokuPlayer(_board), TURN(turn) {
+		// empty
+	}
+	// choose the answer using QinAI
+	Move PlacePawn(const std::vector<Move> steps);
+	~QinAIGomokuPlayer() {}
+private:
+	// print the board to the screen
+	void DisplayBoard(const std::string& info, const std::vector<Move>& steps);
+	// Forbid it
+	QinAIGomokuPlayer(const QinAIGomokuPlayer&);
+	QinAIGomokuPlayer& operator = (const QinAIGomokuPlayer&);
 };
 
 #endif // PLAYERP_H_

@@ -85,6 +85,11 @@ def player(filename_input, filename_output):
 		dis_file_object.write(str(y_target[0, i]) + '\n')
 	dis_file_object.close()
 
+	# print the distribution
+	for i in range(15):
+		for j in range(15):
+			print i, j, y_target[0, i * 15 + j]
+
 	# return the answer (for demo)
 	xx = pos[0] / 15
 	yy = pos[0] % 15

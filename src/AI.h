@@ -518,7 +518,7 @@ void Border_AI::Report(){
 
 /*人工智能_会议组织_启动仪式*/
 void Conference_AI::Start_Work(){
-	srand((unsigned)time(NULL));
+	//srand((unsigned)time(NULL));
 	rand();rand();rand();
 	/*环境主体启动工作*/
 	if(switch_1)cout<<"环境主体启动工作\n";

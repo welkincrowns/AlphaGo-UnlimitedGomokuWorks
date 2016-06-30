@@ -2,7 +2,8 @@ import tensorflow as tf
 import numpy as np
 
 def random_value(shape):
-	return tf.random_normal(shape = shape, mean = 0, stddev = 0.05, dtype = tf.float32)
+	return tf.random_uniform(shape = shape, minval = -0.05, maxval = 0.05, dtype = tf.float32)
+	return tf.random_normal(shape = shape, mean = 0, stddev = 0.06, dtype = tf.float32)
 def weight_variable(shape):
 	return tf.Variable(random_value(shape), name = 'weight')
 def biases_variable(shape):
@@ -23,10 +24,11 @@ def nn_layer(batch_size, input_tensor, weight_shape, num_filter, layer_name, act
 		with tf.name_scope('activation'):
 			if nd_reshape:
 				reshape = tf.reshape(z, [batch_size, 15 * 15])
-				# a = tf.nn.dropout(act(reshape), 0.8)
-				a = act(reshape)
+				
+				a = reshape
 			else:
-				a = act(z)
+				a = tf.nn.dropout(act(z), 0.8)
+				#a = act(z)
 		return a
 
 def nn_fc_layer(input_tensor, input_dim, output_dim, layer_name, act = tf.nn.relu):
@@ -61,14 +63,17 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate,
 	# print batch_size
 	# neural network
 	hidden_conv_layer1 = nn_layer(batch_size, x, [5, 5, 5, 81], 81, 'vconv_layer_1')
-	hidden_conv_layer2 = nn_layer(batch_size, hidden_conv_layer1, [3, 3, 81, 24], 24, 'vconv_layer_2')
-	hidden_conv_layer3 = nn_layer(batch_size, hidden_conv_layer2, [3, 3, 24, 24], 24, 'vconv_layer_3')
-	hidden_conv_layer4 = nn_layer(batch_size, hidden_conv_layer3, [3, 3, 24, 24], 24, 'vconv_layer_4')
-	hidden_conv_layer5 = nn_layer(batch_size, hidden_conv_layer4, [3, 3, 24, 24], 24, 'vconv_layer_5')
-	hidden_conv_layer6 = nn_layer(batch_size, hidden_conv_layer5, [3, 3, 24, 24], 24, 'vconv_layer_6')
+	hidden_conv_layer2 = nn_layer(batch_size, hidden_conv_layer1, [3, 3, 81, 81], 81, 'vconv_layer_2')
+	hidden_conv_layer3 = nn_layer(batch_size, hidden_conv_layer2, [3, 3, 81, 81], 81, 'vconv_layer_3')
+	hidden_conv_layer4 = nn_layer(batch_size, hidden_conv_layer3, [3, 3, 81, 81], 81, 'vconv_layer_4')
+	hidden_conv_layer5 = nn_layer(batch_size, hidden_conv_layer4, [3, 3, 81, 81], 81, 'vconv_layer_5')
+	hidden_conv_layer6 = nn_layer(batch_size, hidden_conv_layer5, [3, 3, 81, 81], 81, 'vconv_layer_6')
+	hidden_conv_layer7 = nn_layer(batch_size, hidden_conv_layer6, [3, 3, 81, 81], 81, 'vconv_layer_7')
+	hidden_conv_layer8 = nn_layer(batch_size, hidden_conv_layer7, [3, 3, 81, 81], 81, 'vconv_layer_8')
+	hidden_conv_layer9 = nn_layer(batch_size, hidden_conv_layer8, [3, 3, 81, 81], 81, 'vconv_layer_9')
 	#print hidden_conv_layer6.get_shape()
-	hidden_conv_layer7 = nn_layer(batch_size, hidden_conv_layer6, [1, 1, 24, 1], 1, 'vconv_layer_7', tf.nn.relu, True)
-	hidden_fc_layer1 = nn_fc_layer(hidden_conv_layer7, 15 * 15, 256, 'vfc_layer_1', tf.nn.relu)
+	hidden_conv_layer10 = nn_layer(batch_size, hidden_conv_layer3, [1, 1, 81, 1], 1, 'vconv_layer_10', tf.nn.relu, True)
+	hidden_fc_layer1 = nn_fc_layer(hidden_conv_layer10, 15 * 15, 256, 'vfc_layer_1', tf.nn.relu)
 	#print hidden_conv_layer7.get_shape()
 	y = nn_fc_layer(hidden_fc_layer1, 256, 1, 'voutput_layer', tf.tanh)
 	#print y.get_shape()
@@ -144,8 +149,9 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate,
 					batch_xs, batch_ys = gomoku.train.next_batch(training_batch_size)
 					summary, _, yt, lossv, wf  = sess.run([merged, train_step, y, loss, hidden_fc_layer1], feed_dict={x: batch_xs, y_: batch_ys})
 					train_writer.add_summary(summary, i)
-					print yt
-					print wf
+					if (i % 10 == 0):
+						print yt
+					#print wf
 					print 'Loss at step %s : %s' % (i, lossv)
 
 			#print 'The final accuracy of test set'
@@ -153,5 +159,5 @@ def training(train_size, test_size, cv_size, training_batch_size, training_rate,
 
 variable_set = {}
 # training(492, 100, 100, 1, 0.003)
-training(5000, 0, 1000, 100, 0.006, 11)
+training(50000, 0, 1000, 100, 0.006, 11)
 

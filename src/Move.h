@@ -3,7 +3,7 @@
 
 class Move{
 public:
-	int turn, x, y;
+	int turn, x, y, type;
 	Move() : turn(0), x(0), y(0) {}
 	Move(int _turn, int _x, int _y) : turn(_turn), x(_x), y(_y) {}
 	Move(const Move &b){
